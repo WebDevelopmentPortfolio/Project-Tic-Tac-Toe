@@ -1,6 +1,16 @@
 
-
+const gameText = document.querySelector(".introduction-to-game");
 const boardContainer = document.querySelector(".game-board-container");
+const startGame = document.getElementById("start-game");
+
+
+
+startGame.addEventListener('click', () => {
+    gameText.replaceChildren();
+    boardContainer.classList.remove('hidden');
+
+
+});
 
 
 function boardGame() {
@@ -57,22 +67,38 @@ const game = (function() {
 
     const players =  [
         {
-            playerNumber: 1,
-            squaresMarked:  [...marksByPlayer],
-            wins: 0
+            playerName: "You",
+            squaresMarked:  [...marksByPlayer],  
+            wins: 0,
+            winStreak: 0,
 
         },
         {
-            playerNumber: 2,
+            playerName: "Opponent",
             squaresMarked:  [...marksByPlayer],
-            wins: 0
+            wins: 0,
+            winStreak: 0
+            
         }
         
     ];
 
     return {
+        playerMarks: function(index, markedByPlayer) {
+            players[index].squaresMarked.push(markedByPlayer);
+        },
+
         addWins: function(index) {
             return players[index].wins++;
+
+        },
+
+        addStreak: function(winnerIndex) {
+            players[winnerIndex].winStreak++;
+
+            const loserIndex = winnerIndex === 0 ? 1: 0;
+            players[loserIndex].winStreak = 0;
+
         },
 
         numberOfWins: function(index) {
@@ -80,8 +106,13 @@ const game = (function() {
 
         },
 
-        playerMarks: function(index, markedByPlayer) {
-            players[index].squaresMarked.push(markedByPlayer);
+        tieStopsStreak: function() {
+            players[0].winStreak = 0;
+            players[1].winStreak = 0;
+        },
+
+        getStreak: function(index) {
+            return players[index].winStreak;
         },
 
         getEachPlayer: function(index) {
@@ -104,18 +135,18 @@ function playGame(playerIndex, markedByPlayer, allMarkedSquares) {
     
     game.playerMarks(playerIndex, markedByPlayer);
     let marks = game.getEachPlayer(playerIndex).squaresMarked;
-    let player = game.getEachPlayer(playerIndex).playerNumber;
+    let player = game.getEachPlayer(playerIndex).playerName;
     
     rulesOfTheGame(marks, playerIndex, player, allMarkedSquares);
 
-    if (game.numberOfWins(playerIndex) === 3) {
-        console.log(`${player} wins!`); 
-        console.log("Want to play another round?");
+    if (game.getStreak(playerIndex) === 3) {
+        console.log(`${player} overall wins!`); 
+        clearForAnotherRound();
 
     }
     
-
 }
+
 
 
 function rulesOfTheGame(marks, playerIndex, player, allMarkedSquares) {
@@ -134,13 +165,17 @@ function rulesOfTheGame(marks, playerIndex, player, allMarkedSquares) {
     
     if (playerHasAllNumbers) {
         game.addWins(playerIndex);
+        game.addStreak(playerIndex);
+        
         console.log(`${player} wins!`);
         console.log(`${player} wins: `, game.numberOfWins(playerIndex));
+        console.log(`${player} streak: `, game.getStreak(playerIndex));
         clearForAnotherRound();
 
     }
     if (!playerHasAllNumbers && allMarkedSquares === 9) {
         console.log("Round over! It's a tie!");
+        game.tieStopsStreak();
         clearForAnotherRound();
         
     }

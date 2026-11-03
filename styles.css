@@ -1,5 +1,91 @@
 
 
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+
+
+}
+
+
+.game-container,
+.introduction-to-game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.game-options {
+    width: 700px;
+}
+
+.game-options h2 {
+    width: 50%;
+
+}
+
+.input-section {
+    width: 50%;
+    gap: 10px;
+    
+}
+
+.input-group {
+    width: 50%;
+    gap: 10px;
+    font-size: 20px;
+
+}
+
+
+.game-options,
+.input-section,
+.input-group {
+    display: flex;
+    align-items: center;
+    
+
+}
+
+.button-section {
+    padding-top: 20px;
+
+}
+
+button {
+    width: 140px;
+    height: 40px;
+    font-size: 18px;
+    background-color: #00A2E8;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+
+}
+
+button:hover {
+    opacity: .7;
+
+}
+
+button:active {
+    opacity: .5;
+}
+
+
+.hidden {
+    display: none !important; /*it doesn't seem to hide so I'm using !important*/
+}
 
 
 .game-board-container {
@@ -14,7 +100,6 @@
     
 
 }
-
 
 
 .board-square {
