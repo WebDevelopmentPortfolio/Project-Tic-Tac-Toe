@@ -10,25 +10,47 @@
     <div class="game-container">
         <h1>Tic-Tac-Toe</h1>
         <div class="introduction-to-game">
-            <h2>Let's play! First to win 3 rounds in a row is the winner.</h2>
-            <div class="game-options">
-                <h2>Who do you want to play with?</h2>
-                <div class="input-section">
-                    <div class="input-group">
+            <div class="intro-description">
+                <h2>Let's play!</h2>
+                <h2>First to win 3 rounds in a row is the winner.</h2>
+            </div>
+            <div class="opponent-options">
+                <h3>Who do you want to play with?</h3>
+                <div class="radio-section">
+                    <div class="radio-group">
                         <label for="human-opponent">Another Human</label>
-                        <input type="radio" id="human-opponent" name="radio-option" checked>
+                        <input type="radio" id="human-opponent" name="radio-option-opponent" checked>
                     </div>
-                    <div class="input-group">
+                    <div class="radio-group">
                         <label for="computer-opponent">A Computer</label>
-                        <input type="radio" id="computer-opponent" name="radio-option">
+                        <input type="radio" id="computer-opponent" name="radio-option-opponent">
                     </div>
                 </div>
             </div>
-            <div class="button-section">
+            <div class="player-options">
+                <h3>Assign yourself as</h3>
+                <div class="radio-section">
+                    <div class="radio-group">
+                        <label for="radio-player-one">Player 1 (X)</label>
+                        <input type="radio" id="radio-player-one" name="radio-option-player" value="player-one" checked>
+                    </div>
+                    <div class="radio-group">
+                        <label for="radio-player-two">Player 2 (O)</label>
+                        <input type="radio" id="radio-player-two" name="radio-option-player" value="player-two">
+                    </div>
+                </div>
+            </div>
+            <div class="start-game-section">
                 <button id="start-game">Start Game</button>
             </div>
         </div>
-        <div class="game-board-container hidden"></div>
+        <div class="game-section hidden">
+            <h2 id="turn-info"></h2>
+            <div class="game-board-container"></div>
+            <div class="continue-game-section hidden">
+                <button id="continue-game">Continue Game?</button>
+            </div>
+        </div>
     </div>
     
     <script type="module" src="./script.js"></script>
