@@ -135,7 +135,6 @@ const gameStarts = (function() {
 
 
 
-
 function boardGame() {  
 
     const rows = 3;
@@ -168,30 +167,45 @@ function boardGame() {
                     return;
                 }
                 else {
-                    
+
+                    let playerIndex, marker, whoseTurnText;
+
                     if (activePlayer === 1 && activePlayerName === "You") {
-                        playGame(0, markedByPlayer, markedSquares.length);
-                        eachSquare.textContent = "X";
-                        whoseTurnInfo.textContent = "Player 2 (O)'s turn (your Opponent):"
+                        playerIndex = 0;
+                        marker = "X";
+                        whoseTurnText = "Player 2 (O)'s turn (your Opponent):"
+
                     }
                     else if (activePlayer === 2 && activePlayerName === "You") {
-                        playGame(1, markedByPlayer, markedSquares.length);
-                        eachSquare.textContent = "O";
-                        whoseTurnInfo.textContent = "Player 1 (X)'s turn (You):";
+                        playerIndex = 1;
+                        marker = "O";
+                        whoseTurnText = "Player 1 (X)'s turn (You):";
+
                     }
                     else if (activePlayer === 1 && activePlayerName === "Opponent") {
-                        playGame(1, markedByPlayer, markedSquares.length);
-                        eachSquare.textContent = "X";
-                        whoseTurnInfo.textContent = "Player 2 (O)'s turn (You)";
-
+                        playerIndex = 1;
+                        marker = "X";
+                        whoseTurnText = "Player 2 (O)'s turn (You)";
                     }
                     else if (activePlayer === 2 && activePlayerName === "Opponent") {
-                        playGame(0, markedByPlayer, markedSquares.length);
-                        eachSquare.textContent = "O";
-                        whoseTurnInfo.textContent = "Player 1 (X)'s turn (Your Opponent)";
-                    }
-                    
+                        playerIndex = 0;
+                        marker = "O";
+                        whoseTurnText = "Player 1 (X)'s turn (Your Opponent)";
 
+                    }
+
+                    eachSquare.textContent = marker;
+
+                    const gameIsOver = resultOfGame(playerIndex, markedByPlayer, markedSquares.length);
+
+                    if (gameIsOver) {
+                        activePlayer = 0;
+                        return;
+
+                    }
+
+                    whoseTurnInfo.textContent = whoseTurnText;
+                    
                     activePlayer = (activePlayer === 1) ? 2 : 1;
                     console.log("Switch active player: ", activePlayer);
                     
@@ -206,7 +220,6 @@ function boardGame() {
     }
 
 }
-
 
 
 
@@ -280,24 +293,8 @@ const game = (function() {
 
 
 
-function playGame(playerIndex, markedByPlayer, allMarkedSquares) {
-    
-    game.playerMarks(playerIndex, markedByPlayer);
-    let marks = game.getEachPlayer(playerIndex).squaresMarked;
-    let player = game.getEachPlayer(playerIndex).playerName;
-    
-    rulesOfTheGame(marks, playerIndex, player, allMarkedSquares);
 
-    if (game.getStreak(playerIndex) === 3) {
-        console.log(`${player} overall wins!`);
-        clearForAnotherRound();
-
-    }
-    
-}
-
-
-/*function playGame(playerIndex, markedByPlayer) {
+function playGame(playerIndex, markedByPlayer) {
 
     game.playerMarks(playerIndex, markedByPlayer);
     let marks = game.getEachPlayer(playerIndex).squaresMarked;
@@ -317,15 +314,15 @@ function playGame(playerIndex, markedByPlayer, allMarkedSquares) {
 
     return playerHasSquaresCombo;
 
-}*/
+}
 
 
 
-/*function resultOfGame(playerIndex, markedByPlayer, allMarkedSquares) {
+function resultOfGame(playerIndex, markedByPlayer, allMarkedSquares) {
     
     let player = game.getEachPlayer(playerIndex).playerName;
     const playerHasSquaresCombo = playGame(playerIndex, markedByPlayer);
-    
+
     if (playerHasSquaresCombo) {
 
         gameStarts.endGame();
@@ -334,65 +331,26 @@ function playGame(playerIndex, markedByPlayer, allMarkedSquares) {
 
         continueGameContainer.classList.remove("hidden");
 
-        whoseTurnInfo.textContent = `${player} wins!`;
+        console.log(`${player} wins!`);
+        whoseTurnInfo.textContent = (player === "You") ? "You win!" : "Your Opponent wins!";
 
         return true;
 
     }
     else if (!playerHasSquaresCombo && allMarkedSquares === 9) {
-        whoseTurnInfo.textContent("Round over! It's a tie!");
+        
+        whoseTurnInfo.textContent = "Round over! It's a tie!";
         game.tieStopsStreak();
         gameStarts.endGame();
-
+        
         return true;
 
     }
 
     return false;
 
-}*/
-
-
-
-function rulesOfTheGame(marks, playerIndex, player, allMarkedSquares) {
-    const winningSquaresCombo = [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-        [1, 4, 7],
-        [2, 5, 8],
-        [3, 6, 9],
-        [1, 5, 9],
-        [3, 5, 7]
-
-    ]
-    const playerHasSquaresCombo = winningSquaresCombo.some(combination => combination.every(square => marks.includes(square)));
-    
-    if (playerHasSquaresCombo) {
-        gameStarts.endGame();
-        game.addWins(playerIndex);
-        game.addStreak(playerIndex);
-
-        continueGameContainer.classList.remove("hidden");
-        console.log("Active player at end of game:", gameStarts.getActivePlayer());
-        
-        whoseTurnInfo.textContent = `${player} wins!`;
-        console.log(`${player} wins!`);
-        console.log(`${player} wins: `, game.numberOfWins(playerIndex));
-        console.log(`${player} streak: `, game.getStreak(playerIndex));
-       
-
-    }
-    if (!playerHasSquaresCombo && allMarkedSquares === 9) {
-        gameStarts.endGame();
-        console.log("Round over! It's a tie!");
-        game.tieStopsStreak();
-        
-        
-    }
-
-
 }
+
 
 
 function clearForAnotherRound() {
