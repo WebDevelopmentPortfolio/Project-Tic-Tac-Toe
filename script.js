@@ -3,13 +3,13 @@ const gameText = document.querySelector(".introduction-to-game");
 const gameSection = document.querySelector(".game-section");
 const whoseTurnInfo = document.getElementById("turn-info");
 const boardContainer = document.querySelector(".game-board-container");
-const startGame = document.getElementById("start-game");
+const beginGame = document.getElementById("start-game");
 const continueGameContainer = document.querySelector(".continue-game-section");
 const continueGame = document.getElementById("continue-game");
+const restartGameContainer = document.querySelector(".restart-section");
 
 
-
-startGame.addEventListener('click', () => {
+beginGame.addEventListener('click', () => {
     
     gameStarts.startGame();
 
@@ -92,16 +92,14 @@ const gameStarts = (function() {
             console.log("Active player name at startGame: ", activePlayerName);
            
             if (activePlayerName === "You") {
-                whoseTurnInfo.textContent = "Player 1 (X)'s turn (You):";
+                whoseTurnInfo.textContent = "Your turn:";
             }
            
             else if (activePlayerName === "Opponent") {
-                whoseTurnInfo.textContent = "Player 1 (X)'s turn (your Opponent):";
+                whoseTurnInfo.textContent = "Your Opponent's turn:";
             }
 
             activePlayer = 1;
-
-            /*boardGame();*/
 
 
         },
@@ -146,8 +144,6 @@ function boardGame() {
     let markedByPlayer = "";
     let activePlayer = gameStarts.getActivePlayer();
     let activePlayerName = gameStarts.getActivePlayerName();
-    console.log("Active player name boardGame: ", activePlayerName);
-    /*console.log("Active player at boardGame: ", activePlayer);*/
     
     for (let i = 1; i <= totalSquares; i++) {
         const eachSquare = document.createElement("div");
@@ -168,43 +164,27 @@ function boardGame() {
                 }
                 else {
 
-                    let playerIndex, marker, whoseTurnText;
-
-                    if (activePlayer === 1 && activePlayerName === "You") {
-                        playerIndex = 0;
-                        marker = "X";
-                        whoseTurnText = "Player 2 (O)'s turn (your Opponent):"
-
-                    }
-                    else if (activePlayer === 2 && activePlayerName === "You") {
-                        playerIndex = 1;
-                        marker = "O";
-                        whoseTurnText = "Player 1 (X)'s turn (You):";
-
-                    }
-                    else if (activePlayer === 1 && activePlayerName === "Opponent") {
-                        playerIndex = 1;
-                        marker = "X";
-                        whoseTurnText = "Player 2 (O)'s turn (You)";
-                    }
-                    else if (activePlayer === 2 && activePlayerName === "Opponent") {
-                        playerIndex = 0;
-                        marker = "O";
-                        whoseTurnText = "Player 1 (X)'s turn (Your Opponent)";
-
-                    }
-
-                    eachSquare.textContent = marker;
+                    const display = rulesOfDisplay(activePlayer, activePlayerName);
+                    display.displayText();    
+                    const playerIndex = display.getPlayerIndex();
+                    eachSquare.textContent = display.getMarker();
 
                     const gameIsOver = resultOfGame(playerIndex, markedByPlayer, markedSquares.length);
 
                     if (gameIsOver) {
                         activePlayer = 0;
-                        return;
+
+                        if ((game.getStreak(playerIndex)) === 3) {
+                            whoseTurnInfo.textContent = (activePlayerName === "You") ? "Your Opponent wins three in a row!😁" : "You win three in a row! Super!"
+                            continueGameContainer.replaceChildren();
+                            restartGameContainer.classList.remove("hidden");
+
+                        }
+                        return;   
 
                     }
 
-                    whoseTurnInfo.textContent = whoseTurnText;
+                    whoseTurnInfo.textContent = display.getWhoseTurnText();
                     
                     activePlayer = (activePlayer === 1) ? 2 : 1;
                     console.log("Switch active player: ", activePlayer);
@@ -223,7 +203,6 @@ function boardGame() {
 
 
 
-//IIFE
 const game = (function() {
     let marksByPlayer = [];
 
@@ -324,7 +303,6 @@ function resultOfGame(playerIndex, markedByPlayer, allMarkedSquares) {
     const playerHasSquaresCombo = playGame(playerIndex, markedByPlayer);
 
     if (playerHasSquaresCombo) {
-
         gameStarts.endGame();
         game.addWins(playerIndex);
         game.addStreak(playerIndex);
@@ -337,8 +315,7 @@ function resultOfGame(playerIndex, markedByPlayer, allMarkedSquares) {
         return true;
 
     }
-    else if (!playerHasSquaresCombo && allMarkedSquares === 9) {
-        
+    else if (!playerHasSquaresCombo && allMarkedSquares === 9) {   
         whoseTurnInfo.textContent = "Round over! It's a tie!";
         game.tieStopsStreak();
         gameStarts.endGame();
@@ -350,6 +327,52 @@ function resultOfGame(playerIndex, markedByPlayer, allMarkedSquares) {
     return false;
 
 }
+
+
+const rulesOfDisplay = (function(activePlayer, activePlayerName) {
+
+    let playerIndex, marker, whoseTurnText;
+
+    return {
+        displayText: function() {
+            if (activePlayer === 1 && activePlayerName === "You") {
+                playerIndex = 0;
+                marker = "X";
+                whoseTurnText = "Your Opponent's turn:"
+
+            }
+            else if (activePlayer === 2 && activePlayerName === "You") {
+                playerIndex = 1;
+                marker = "O";
+                whoseTurnText = "Your turn:";
+
+            }
+            else if (activePlayer === 1 && activePlayerName === "Opponent") {
+                playerIndex = 1;
+                marker = "X";
+                whoseTurnText = "Your turn:";
+            }
+            else if (activePlayer === 2 && activePlayerName === "Opponent") {
+                playerIndex = 0;
+                marker = "O";
+                whoseTurnText = "Your Opponent's turn:";
+
+            }
+
+        },
+        getPlayerIndex: function() {
+            return playerIndex;
+        },
+        getMarker: function() {
+            return marker;
+        },
+        getWhoseTurnText: function() {
+            return whoseTurnText;
+        }
+
+    }
+    
+});
 
 
 
@@ -369,9 +392,6 @@ function clearForAnotherRound() {
 
 continueGame.addEventListener('click', () => {
     gameStarts.startGame();
-    console.log("Active player at continueGame: ", gameStarts.getActivePlayer());
-    console.log("Active player name at continueGame: ", gameStarts.getActivePlayerName());
-    
     boardContainer.replaceChildren();
     boardGame();
 
