@@ -20,8 +20,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     font-family: "game-font";
@@ -41,12 +40,17 @@ body {
 }
 
 h1 {
-    font-size: 68px;
+    /*font-size: 68px;*/
+    font-size: clamp(52px, 3cqw, 68px);
+    text-align: center;
 
 }
 
 h2 {
-    font-size: 40px;
+    /*font-size: 40px;*/
+    font-size: clamp(32px, 3cqw, 40px);
+    text-align: center;
+    
 }
 
 
@@ -54,23 +58,27 @@ h2 {
 .player-options {
     display: flex;
     justify-content: flex-end;
-    width: 720px;
-    
+    max-width: 800px;
+    width: 100%;
     
 }
 
 
-.opponent-options h2,
-.player-options h2 {
-    width: 50%;
-    padding-right: 20px;
-    
+.opponent-options h3,
+.player-options h3 {
+    display: flex;
+    max-width: 370px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
 
 }
 
 .radio-section {
-    width: 50%;
+    max-width: 430px;
+    width: 100%;
     padding-left: 20px;
+    gap: 10px;
     
 }
 
@@ -78,7 +86,7 @@ h2 {
     width: 50%;
     gap: 16px;
     font-size: 22px;
-
+    
 }
 
 
@@ -86,13 +94,26 @@ h2 {
 .radio-group {
     display: flex;
     align-items: end;
+    justify-content: flex-start;
+    padding-right: 10px;
+
+}
+
+.radio-group label {
+    display: flex;
+    flex: 1;
     justify-content: flex-end;
+}
+
+.radio-group input {
+    width: 20px;
 
 }
 
 
 h3 {
     font-size: 24px;
+    
 }
 
 
@@ -141,8 +162,6 @@ button:active {
     align-items: center;
     width: 800px;
     
-    
-    
 }
 
 .game-section h2 {
@@ -161,7 +180,7 @@ button:active {
     width: 100%;
     box-sizing: border-box;
     aspect-ratio: 1 / 1;
-    padding-top: 20px;
+    padding-top: 40px;
 
 }
 
@@ -169,15 +188,34 @@ button:active {
 .board-square {
     box-sizing: border-box;
     flex: 1 1 100%;
-    box-shadow: inset 0 0 0 1px #ddd;
+    border-right: 1px solid brown;
+    border-bottom: 1px solid brown;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 40px;
+    box-sizing: border-box;
 
 }
+
+.board-square:nth-child(3n) {
+    border-right: none;
+}
+
+
+.board-square:nth-child(n+7) {
+    border-bottom: none;
+}
+
 
 .continue-game-section {
-    padding-top: 40px;
-
+    padding-top: 60px;
+    display: flex;
+    gap: 10px;
 }
+
+
+.restart-section {
+    padding-top: 60px;
+}
+
