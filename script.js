@@ -15,13 +15,15 @@ beginGame.addEventListener('click', () => {
     gameStarts.startGame();
 
     gameSection.classList.remove('hidden');
+    gameText.classList.add('hidden');
+    continueGameContainer.classList.add('hidden');
+    restartGameContainer.classList.add('hidden');
 
     boardContainer.replaceChildren();
     boardGame();
     
     /*gameText.replaceChildren();*/
-    gameText.classList.add('hidden');
-    restartGameContainer.classList.add('hidden');
+    
 
     
 });
